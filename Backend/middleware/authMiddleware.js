@@ -1,18 +1,29 @@
 import jwt from "jsonwebtoken";
+import redisClient from "../services/redisService.js";
 
 
 
-export const authUser = (req, res, next) => {
+export const authUser = async (req, res, next) => {
     try {
 
-        const { token } = req.cookies.token  || req.headers.authorization?.split(" ")[1];
+        let token = req.cookies?.token;
+
+        if (!token && req.headers.authorization) {
+            token = req.headers.authorization.split(" ")[1]; // Expecting "Bearer <token>"
+        }
 
         if (!token) {
-        return res.json({ success: false, message: 'Not Authorized Login Again' })
+            return res.json({ success: false, message: 'Not Authorized Login Again' })
+        }
+
+        const isLoggedOut = await redisClient.get(token);
+        if (isLoggedOut) {
+            res.cookie('token', '');
+            return res.json({ success: false, message: 'Token is invalidated. Please login again.' });
         }
 
         const token_decode = jwt.verify(token, process.env.JWT_SECRET)
-        req.body.userId = token_decode.id
+        req.user = token_decode;
 
         next()
 

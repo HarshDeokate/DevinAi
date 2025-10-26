@@ -1,6 +1,7 @@
 import { validationResult } from 'express-validator';
 import User from '../models/userModel.js';
 import * as userServices from '../services/userServices.js';
+import redisClient from '../services/redisService.js';
 
 /**
  * Create a new user
@@ -92,8 +93,38 @@ export const getUserProfileControl = async (req, res) => {
     console.log("req.user:", req.user);
     
 
-    res.status(200).json({
+    return res.status(200).json({
         user: req.user
     });
 
+};
+
+export const logoutUserControl = async (req, res) => {
+    try {
+        // Invalidate the token in Redis
+        let token = req.cookies?.token;
+        
+        if (!token && req.headers.authorization) {
+            token = req.headers.authorization.split(" ")[1]; // Expecting "Bearer <token>"
+        }
+        if (token) {
+            await redisClient.set(token, 'logout', 'EX', 24 * 60 * 60); // Set expiration to 24 hours
+        }
+        
+        // Clear the cookie
+        // res.clearCookie('token');
+
+        return res.status(200).json({
+            success: true,
+            message: 'Logged out successfully'
+        });
+    }
+    catch (error) {
+        console.error('Logout error:', error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred during logout',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
 };
