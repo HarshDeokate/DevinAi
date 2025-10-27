@@ -1,8 +1,31 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from '../../config/axios'
+import { useState } from 'react'
 
 
 const Register = () => {
+
+    const [email , setEmail] = React.useState('');
+    const [password , setPassword] = React.useState('');
+    const navigate = useNavigate();
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('/register', {
+                email, password 
+            });
+            console.log('Registration successful:', response.data);
+            navigate('/');
+            // You can redirect the user or perform other actions here
+        } catch (error) {
+            // console.error('Registration failed:', error.response ? error.response.data : error.message);
+            console.error('Registration failed:', error.message);
+        }
+    }
+
+
     
   return (
     <div>
@@ -12,7 +35,9 @@ const Register = () => {
                 Create Account !!
                 </h2>
 
-                <form className="space-y-6">
+                <form 
+                onSubmit={submitHandler}
+                className="space-y-6">
                 <div>
                     <label htmlFor="name" className="block text-gray-300 mb-2 text-sm uppercase tracking-wide">
                     Full Name
@@ -30,6 +55,7 @@ const Register = () => {
                     Email
                     </label>
                     <input
+                    onChange = {(e)=>setEmail(e.target.value)}
                     type="email"
                     id="email"
                     placeholder="you@example.com"
@@ -42,6 +68,7 @@ const Register = () => {
                     Password
                     </label>
                     <input
+                    onChange = {(e)=>setPassword(e.target.value)}
                     type="password"
                     id="password"
                     placeholder="••••••••"

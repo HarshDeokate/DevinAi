@@ -21,7 +21,8 @@ export const createUserControl = async (req, res) => {
         const user = await userServices.createUser(req.body);
         const token = await user.generatejwt();
         
-        
+        //remove password from response
+        user.password = undefined;        
         return res.status(201).json({
             success: true,
             data: { user, token }
@@ -72,6 +73,9 @@ export const loginUserControl = async (req, res) => {
         }
         
         const token = await user.generatejwt();
+
+        // Remove password from response
+        user.password = undefined;
     
         
         return res.status(200).json({

@@ -1,18 +1,34 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from '../../config/axios'
+import { useState } from 'react'
+import UserContext from '../context/userContext'
+import { useContext } from 'react'  
 
 const Login = () => {
 
-    // const onSubmitHandler = async (e)=>{
-    //     e.preventDefault()
-    //     try{
+    const [email , setEmail] = useState('');    
+    const [password , setPassword] = useState('');
+    const navigate = useNavigate();
 
-    //     }
-    //     catch{
+    let { setUser } = useContext(UserContext);
 
-    //     }
-    // }
+    const submitHandler = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('/login', {
+                email, password
+            });
+            console.log('Login successful:', response.data);
+            localStorage.setItem('token', response.data.token);
+            setUser(response.data.user);
+            navigate('/');
+            // You can redirect the user or perform other actions here
+        } catch (error) {
+            console.error('Login failed:', error.response ? error.response.data : error.message);
+        }   
+    }
+
     return (
         <div>
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-black">
@@ -21,12 +37,14 @@ const Login = () => {
                     Welcome Back !!
                     </h2>
 
-                    <form className="space-y-6">
+                    <form onSubmit={submitHandler}
+                    className="space-y-6">
                     <div>
                         <label htmlFor="email" className="block text-gray-300 mb-2 text-sm uppercase tracking-wide">
                         Email
                         </label>
                         <input
+                        onChange={(e)=>setEmail(e.target.value)}
                         type="email"
                         id="email"
                         placeholder="your@email.com"
@@ -39,6 +57,7 @@ const Login = () => {
                         Password
                         </label>
                         <input
+                        onChange = {(e)=>setPassword(e.target.value)}
                         type="password"
                         id="password"
                         placeholder="••••••••"
