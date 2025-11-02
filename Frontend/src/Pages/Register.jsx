@@ -2,12 +2,15 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../config/axios'
 import { useState } from 'react'
+import UserContext from '../context/userContext'
+import { useContext } from 'react'
 
 
 const Register = () => {
 
     const [email , setEmail] = React.useState('');
     const [password , setPassword] = React.useState('');
+    const { user ,setUser } = useContext(UserContext);
     const navigate = useNavigate();
 
     const submitHandler = async (e) => {
@@ -17,6 +20,9 @@ const Register = () => {
                 email, password 
             });
             console.log('Registration successful:', response.data);
+            localStorage.setItem('token', response.data.token);
+            setUser(response.data.user);
+            console.log(user);
             navigate('/');
             // You can redirect the user or perform other actions here
         } catch (error) {
