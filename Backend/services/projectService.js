@@ -13,6 +13,8 @@ export const createProject = async (name ,userId) => {
         name,
         users: [userId]
     });
+
+    return project;
 }
 
 

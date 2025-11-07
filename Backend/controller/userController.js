@@ -106,11 +106,11 @@ export const getUserProfileControl = async (req, res) => {
 export const logoutUserControl = async (req, res) => {
     try {
         // Invalidate the token in Redis
-        let token = req.cookies?.token;
+        const token = req.cookies.token || req.headers.authorization.split(' ')[ 1 ];
         
-        if (!token && req.headers.authorization) {
-            token = req.headers.authorization.split(" ")[1]; // Expecting "Bearer <token>"
-        }
+        // if (!token && req.headers.authorization) {
+        //     token = req.headers.authorization.split(" ")[1]; // Expecting "Bearer <token>"
+        // }
         if (token) {
             await redisClient.set(token, 'logout', 'EX', 24 * 60 * 60); // Set expiration to 24 hours
         }

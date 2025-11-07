@@ -16,12 +16,12 @@ const Login = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/login', {
+            const response = await axios.post('/users/login', {
                 email, password
             });
             console.log('Login successful:', response.data);
-            localStorage.setItem('token', response.data.token);
-            setUser(response.data.user);
+            localStorage.setItem('token', response.data.data.token);
+            setUser(response.data.data.user);
             navigate('/');
             // You can redirect the user or perform other actions here
         } catch (error) {
