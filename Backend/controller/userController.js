@@ -132,3 +132,24 @@ export const logoutUserControl = async (req, res) => {
         });
     }
 };
+
+export const getAllUsersControl = async (req, res) => {
+    try {
+        const loggedInUser = await User.findOne({ email: req.user.email });
+        const userId = loggedInUser._id;
+
+        const users = await userServices.getAllUers(userId);
+        return res.status(200).json({
+            success: true,
+            data: users
+        });
+    }
+    catch (error) {
+        console.error('Get all users error:', error.message);
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred while fetching users',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};
