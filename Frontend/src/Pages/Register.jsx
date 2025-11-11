@@ -10,7 +10,7 @@ const Register = () => {
 
     const [email , setEmail] = React.useState('');
     const [password , setPassword] = React.useState('');
-    const { user ,setUser } = useContext(UserContext);
+    const { setUser } = useContext(UserContext);
     const navigate = useNavigate();
 
     const submitHandler = async (e) => {
@@ -20,8 +20,8 @@ const Register = () => {
                 email, password 
             });
             console.log('Registration successful:', response.data);
-            localStorage.setItem('token', response.data.token);
-            setUser(response.data.user);
+            localStorage.setItem('token', response.data.data.token);
+            setUser(response.data.data.user);
             console.log(user);
             navigate('/');
             // You can redirect the user or perform other actions here

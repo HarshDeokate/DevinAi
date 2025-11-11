@@ -26,34 +26,56 @@ export const getProjectsByUserId = async (userId) => {
     return projects;
 }
 
-export const addUsersToProject = async ({projectId, users}) => {
-    if(!projectId){
-        throw new Error('Project ID is required');
+export const addUsersToProject = async ({projectId, users ,userId}) => {
+    if (!projectId) {
+        throw new Error("projectId is required")
     }
-    if(!users || !Array.isArray(users) || users.length === 0){
-        throw new Error('Users array is required');
-    }
-    const project = await Project.findById(
 
-        {
-            _id: mongoose.Types.ObjectId(projectId),
-            users:users.map(id => mongoose.Types.ObjectId(id))
-        }
-    );
-    if(!project){
-        throw new Error('Project not found');
-    }       
-    
-    const updatedProject = await Project.findByIdAndUpdate({
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+        throw new Error("Invalid projectId")
+    }
+
+    if (!users) {
+        throw new Error("users are required")
+    }
+
+    if (!Array.isArray(users) || users.some(userId => !mongoose.Types.ObjectId.isValid(userId))) {
+        throw new Error("Invalid userId(s) in users array")
+    }
+
+    if (!userId) {
+        throw new Error("userId is required")
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        throw new Error("Invalid userId")
+    }
+
+
+    const project = await Project.findOne({
         _id: projectId,
-    },
-    {
-        $addToSet: {users: {$each: users.map(id => mongoose.Types.ObjectId(id))}}
-    },
-    {new: true}
-    );
+        users: userId
+    })
 
-    return updatedProject;
+    console.log(project)
+
+    if (!project) {
+        throw new Error("User not belong to this project")
+    }
+
+    const updatedProject = await Project.findOneAndUpdate({
+        _id: projectId
+    }, {
+        $addToSet: {
+            users: {
+                $each: users
+            }
+        }
+    }, {
+        new: true
+    })
+
+    return updatedProject
 }
 
 export const getProjectById = async (projectId) => {

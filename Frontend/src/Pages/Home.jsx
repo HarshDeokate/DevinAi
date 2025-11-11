@@ -2,7 +2,6 @@ import React from 'react'
 import {useContext , useState , useEffect} from 'react'
 import UserContext from '../context/userContext.jsx'
 import axios from '../../config/axios'
-import { use } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 
 const Home = () => {
@@ -44,14 +43,14 @@ const Home = () => {
           New Project 
           <i className="ri-link ml-2"></i>
         </button>
-        {projects.map((project) => (
+        {projects.length > 0 && projects.map((project) => (
           <div key={project._id} className="project cursor-pointer flex flex-col gap-2 p-4 border border-slate-300 rounded-md min-w-52 hover:bg-slate-200" onClick={()=>Navigate('/Project' ,{state: { project }})}>
             <h2 className='font-semibold'> 
               {project.name}
             </h2>
             <div className='flex gap-2'>
               <p>
-                <i class="ri-user-line"> Collaborators:</i>
+                <i className="ri-user-line"> Collaborators:</i>
                 {project.users.length}
               </p>
             </div>

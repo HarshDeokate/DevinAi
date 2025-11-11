@@ -138,7 +138,7 @@ export const getAllUsersControl = async (req, res) => {
         const loggedInUser = await User.findOne({ email: req.user.email });
         const userId = loggedInUser._id;
 
-        const users = await userServices.getAllUers(userId);
+        const users = await userServices.getAllUsers({userId});
         return res.status(200).json({
             success: true,
             data: users

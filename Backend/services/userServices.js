@@ -15,7 +15,7 @@ export const createUser = async ({email , password}) => {
     return user;
 };
 
-export const getAllUers = async ({userId}) => {
+export const getAllUsers = async ({userId}) => {
     const users = await userModel.find({ _id  :{ $ne: userId } });
     return users;
     
