@@ -4,6 +4,7 @@ import Login from '../Pages/login.jsx';
 import Register from '../Pages/Register.jsx';
 import Home from '../Pages/Home.jsx';
 import Project from '../Pages/project.jsx';
+
 const AppRoutes = () => {
   return (
     <BrowserRouter>

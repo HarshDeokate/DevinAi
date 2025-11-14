@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
 import axios from '../../config/axios';
 
-const project = () => {
+const Project = () => {
     const location = useLocation();
     // console.log(location.state.project);
     const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
@@ -11,6 +11,7 @@ const project = () => {
     const [selectedUserId, setSelectedUserId] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [ProjectUsers , setProjectUsers] = useState([]);
 
     // Fetch users from API
     useEffect(() => {
@@ -27,10 +28,17 @@ const project = () => {
             }
         };
 
+        axios.get(`/projects/get-project/${location.state.project._id}`)
+        .then((res) =>
+            setProjectUsers(res.data.users) 
+        )
+        .catch((err) => console.error('Error fetching project users:', err));
+
         if (isUserModalOpen) {
             fetchUsers();
+            
         }
-    }, [isUserModalOpen]);
+    }, [isUserModalOpen , isSidePanelOpen]);
 
     const addCollaborators = async() => {
         try {
@@ -86,22 +94,30 @@ const project = () => {
 
             <div className={`side-panel w-full h-full flex flex-col bg-slate-50 absolute transition-all ${isSidePanelOpen?'translate-x-0':'-translate-x-full'} top-0`}>
 
-              <header className='flex justify-end p-2 px-3 w-full bg-slate-100'> 
+              <header className='flex justify-between item-center p-2 px-3 w-full bg-slate-100'> 
+                <h2 className='font-semibold text-lg p-2 '>Collaborators</h2>
                 
                 <button className='p-2'>
-                  <i className="ri-close-fill" onClick={()=> setIsSidePanelOpen(false)}></i>
+                  <i className="ri-close-fill font-semibold text-lg" onClick={()=> setIsSidePanelOpen(false)}></i>
                 </button>
               </header>
-              <div className="users cursor hover:bg-slate-300 flex flex-col gap-2">
-                <div className="user flex gap-2 items-center p-2 hover:bg-slate-200 cursor-pointer">
-                  <div className="aspecct-square rounded-full w-fit h-fit p-5 text-white bg-slate-400 m-2">
-                    <i className="ri-user-4-line"></i>
-                  </div>
+                <div className="users flex flex-col gap-2">
 
-                  <h1 className='font-semibold'>Username</h1>
-                  
+                    {ProjectUsers?.map(user => 
+
+
+                        (
+                            <div key = {user._id} className="user cursor-pointer hover:bg-slate-200 p-2 flex gap-2 items-center">
+                                <div  className='aspect-square rounded-full w-fit h-fit flex items-center justify-center p-5 text-white bg-slate-600'>
+                                    <i className="ri-user-fill absolute"></i>
+                                </div>
+                                <h1 className='font-semibold text-lg '>{user.email}</h1>
+                            </div>
+                        )
+
+
+                    )}
                 </div>
-              </div>
             </div>
         </section>
 
@@ -202,4 +218,4 @@ const project = () => {
   )
 }
 
-export default project
+export default Project
