@@ -2,6 +2,7 @@ import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
 import axios from '../../config/axios';
+import  {initializeSocket} from '../../config/socket'
 
 const Project = () => {
     const location = useLocation();
@@ -27,6 +28,8 @@ const Project = () => {
                 setLoading(false);
             }
         };
+        
+        initializeSocket();
 
         axios.get(`/projects/get-project/${location.state.project._id}`)
         .then((res) =>
@@ -38,7 +41,7 @@ const Project = () => {
             fetchUsers();
             
         }
-    }, [isUserModalOpen , isSidePanelOpen]);
+    },[isUserModalOpen]);
 
     const addCollaborators = async() => {
         try {

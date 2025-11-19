@@ -28,12 +28,12 @@ const Home = () => {
 
   useEffect(() => {
     axios.get('/projects/').then((response) => {
-      // console.log(response.data.name);
+      
       setProjects(response.data);
     }).catch((error) => {
       console.error('There was an error fetching the users!', error);
     });
-  }, []);
+  },[]);
 
   return (
     
