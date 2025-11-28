@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from '../../config/axios'
+import axios from '../config/axios'
 import { useState } from 'react'
-import UserContext from '../context/userContext'
+import {UserContext} from '../context/userContext'
 import { useContext } from 'react'  
 
 const Login = () => {
@@ -11,7 +11,7 @@ const Login = () => {
     const [password , setPassword] = useState('');
     const navigate = useNavigate();
 
-    let { setUser } = useContext(UserContext);
+    let { user ,setUser } = useContext(UserContext);
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -20,10 +20,12 @@ const Login = () => {
                 email, password
             });
             console.log('Login successful:', response.data);
+            localStorage.removeItem('token');
+
             localStorage.setItem('token', response.data.data.token);
             setUser(response.data.data.user);
             navigate('/');
-            // You can redirect the user or perform other actions here
+            
         } catch (error) {
             console.error('Login failed:', error.response ? error.response.data : error.message);
         }   
@@ -80,20 +82,20 @@ const Login = () => {
                     </Link>
                     </p>
 
-                    <div className="flex items-center my-6">
+                    {/* <div className="flex items-center my-6">
                     <div className="flex-grow h-px bg-gray-600"></div>
                     <span className="text-gray-400 px-3 text-sm">or</span>
                     <div className="flex-grow h-px bg-gray-600"></div>
-                    </div>
+                    </div> */}
 
-                    <button className="w-full flex items-center justify-center gap-2 border border-gray-500 py-3 rounded-lg text-white hover:bg-white/10 transition-all duration-200">
+                    {/* <button className="w-full flex items-center justify-center gap-2 border border-gray-500 py-3 rounded-lg text-white hover:bg-white/10 transition-all duration-200">
                     <img
                         src="https://www.svgrepo.com/show/475656/google-color.svg"
                         alt="Google"
                         className="w-5 h-5"
                     />
                     Continue with Google
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </div>

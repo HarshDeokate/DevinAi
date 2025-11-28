@@ -1,15 +1,15 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from '../../config/axios'
+import axios from '../config/axios'
 import { useState } from 'react'
-import UserContext from '../context/userContext'
+import {UserContext} from '../context/userContext'
 import { useContext } from 'react'
 
 
 const Register = () => {
 
-    const [email , setEmail] = React.useState('');
-    const [password , setPassword] = React.useState('');
+    const [email , setEmail] = useState('');
+    const [password , setPassword] = useState('');
     const { setUser } = useContext(UserContext);
     const navigate = useNavigate();
 
@@ -22,11 +22,8 @@ const Register = () => {
             console.log('Registration successful:', response.data);
             localStorage.setItem('token', response.data.data.token);
             setUser(response.data.data.user);
-            console.log(user);
             navigate('/');
-            // You can redirect the user or perform other actions here
         } catch (error) {
-            // console.error('Registration failed:', error.response ? error.response.data : error.message);
             console.error('Registration failed:', error.message);
         }
     }
@@ -44,7 +41,7 @@ const Register = () => {
                 <form 
                 onSubmit={submitHandler}
                 className="space-y-6">
-                <div>
+                {/* <div>
                     <label htmlFor="name" className="block text-gray-300 mb-2 text-sm uppercase tracking-wide">
                     Full Name
                     </label>
@@ -54,7 +51,7 @@ const Register = () => {
                     placeholder="Enter your name"
                     className="w-full p-3 rounded-lg bg-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
-                </div>
+                </div> */}
 
                 <div>
                     <label htmlFor="email" className="block text-gray-300 mb-2 text-sm uppercase tracking-wide">
@@ -82,7 +79,7 @@ const Register = () => {
                     />
                 </div>
 
-                <div>
+                {/* <div>
                     <label htmlFor="confirmPassword" className="block text-gray-300 mb-2 text-sm uppercase tracking-wide">
                     Confirm Password
                     </label>
@@ -92,7 +89,7 @@ const Register = () => {
                     placeholder="Re-enter password"
                     className="w-full p-3 rounded-lg bg-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
                     />
-                </div>
+                </div> */}
 
                 <button
                     type="submit"
@@ -109,7 +106,7 @@ const Register = () => {
                 </Link>
                 </p>
 
-                <div className="flex items-center my-6">
+                {/* <div className="flex items-center my-6">
                 <div className="flex-grow h-px bg-gray-600"></div>
                 <span className="text-gray-400 px-3 text-sm">or</span>
                 <div className="flex-grow h-px bg-gray-600"></div>
@@ -122,7 +119,7 @@ const Register = () => {
                     className="w-5 h-5"
                 />
                 Sign up with Google
-                </button>
+                </button> */}
             </div>
         </div>
     </div>

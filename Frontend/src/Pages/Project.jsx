@@ -1,18 +1,23 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react';
-import axios from '../../config/axios';
-import  {initializeSocket} from '../../config/socket'
+import axios from '../config/axios';
+import  {initializeSocket , sendMessage } from '../config/socket'
+import { receiveMessage } from '../config/socket';
+import {UserContext} from '../context/userContext';
 
 const Project = () => {
     const location = useLocation();
-    // console.log(location.state.project);
     const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [ProjectUsers , setProjectUsers] = useState([]);
+    const [message, setMessage] = useState("");
+    const navigate = useNavigate();
+    const {user} = useContext(UserContext);
+    const [Project , setProject] = useState(location.state.project);
 
     // Fetch users from API
     useEffect(() => {
@@ -29,7 +34,12 @@ const Project = () => {
             }
         };
         
-        initializeSocket();
+        initializeSocket(Project._id);
+
+        receiveMessage('projectMessage', (data) => {
+            console.log('Received message:', data);
+            setMessages(prevMessages => [ ...prevMessages, data ]) // Update messages state
+        });
 
         axios.get(`/projects/get-project/${location.state.project._id}`)
         .then((res) =>
@@ -64,6 +74,19 @@ const Project = () => {
         }
         // setIsUserModalOpen(false);
     };
+
+    const send = () => {
+        console.log(user);
+        console.log("Sending message:", message);
+        sendMessage('projectMessage', {
+            message,
+            sender: user
+        })
+        setMessage("")
+
+    }
+
+
   return (
     <main className='h-screen w-screen flex '>
 
@@ -90,8 +113,8 @@ const Project = () => {
               </div>
 
               <div className="input-field w-full flex">
-                <input type="text" placeholder='Enter Message' className='flex-grow p-2 px-4 border-none outline-none bg-white' />
-                <button className='px-5 bg-slate-950 text-white'><i className="ri-send-plane-fill" ></i></button>
+                <input  value = {message}  onChange={(e) => setMessage(e.target.value)} type="text" placeholder='Enter Message' className='flex-grow p-2 px-4 border-none outline-none bg-white' />
+                <button className='px-5 bg-slate-950 text-white ' onClick={send}><i className="ri-send-plane-fill" ></i></button>
               </div>
             </div>
 

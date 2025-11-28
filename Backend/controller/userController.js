@@ -93,9 +93,6 @@ export const loginUserControl = async (req, res) => {
 };
 
 export const getUserProfileControl = async (req, res) => {
-    
-    console.log("req.user:", req.user);
-    
 
     return res.status(200).json({
         user: req.user
@@ -116,7 +113,7 @@ export const logoutUserControl = async (req, res) => {
         }
         
         // Clear the cookie
-        // res.clearCookie('token');
+        res.clearCookie('token');
 
         return res.status(200).json({
             success: true,

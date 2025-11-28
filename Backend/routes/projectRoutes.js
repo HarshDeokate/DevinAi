@@ -11,7 +11,7 @@ router.post('/create',
     createProjectController
 )
 
-router.get('/', authMiddleware.authUser, getProjects);
+router.get('/all', authMiddleware.authUser, getProjects);
 
 router.put('/addUser', authMiddleware.authUser,
     body('projectId').notEmpty().withMessage('Project ID is required'),

@@ -1,11 +1,23 @@
 import React from 'react'
 import {useContext , useState , useEffect} from 'react'
-import UserContext from '../context/userContext.jsx'
-import axios from '../../config/axios'
+import {UserContext} from '../context/userContext.jsx'
+import axios from '../config/axios'
 import { Navigate, useNavigate } from 'react-router-dom'
 
 const Home = () => {
+
+
+  useEffect(() => {
+    axios.get('/projects/all').then((response) => {
+      setProjects(response.data);
+    }).catch((error) => {
+      console.error('There was an error fetching the users!', error);
+    });
+  },[]);
+
+  
   const {user} = useContext(UserContext);
+  const token = localStorage.getItem('token');
   const [projectName, setProjectName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projects,setProjects] = useState([]);
@@ -26,14 +38,7 @@ const Home = () => {
       });
   }
 
-  useEffect(() => {
-    axios.get('/projects/').then((response) => {
-      
-      setProjects(response.data);
-    }).catch((error) => {
-      console.error('There was an error fetching the users!', error);
-    });
-  },[]);
+  
 
   return (
     
