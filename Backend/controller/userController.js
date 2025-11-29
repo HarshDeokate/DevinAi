@@ -93,9 +93,11 @@ export const loginUserControl = async (req, res) => {
 };
 
 export const getUserProfileControl = async (req, res) => {
-
+    const loggedInUser = await User.findOne({
+        email: req.user.email
+    }).lean()
     return res.status(200).json({
-        user: req.user
+        user: loggedInUser
     });
 
 };

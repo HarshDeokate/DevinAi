@@ -54,10 +54,13 @@ io.use(async(socket, next) => {
 io.on('connection', Socket => {
   console.log("A User Connected");
 
-  Socket.join(Socket.project);
+  Socket.roomId = Socket.project._id.toString();
+
+  Socket.join(Socket.roomId);
+
   Socket.on('projectMessage', (data) => { 
     console.log("Received project message:", data);
-    Socket.broadcast.to(Socket.project._id).emit('projectMessage', data);
+    Socket.broadcast.to(Socket.roomId).emit('projectMessage', data);
   });
   
   Socket.on('event', data => { /* … */ });

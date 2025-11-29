@@ -15,9 +15,9 @@ const Project = () => {
     const [loading, setLoading] = useState(false);
     const [ProjectUsers , setProjectUsers] = useState([]);
     const [message, setMessage] = useState("");
-    const navigate = useNavigate();
     const {user} = useContext(UserContext);
     const [Project , setProject] = useState(location.state.project);
+    const msgBox = React.useRef();
 
     // Fetch users from API
     useEffect(() => {
@@ -25,7 +25,6 @@ const Project = () => {
             try {
                 setLoading(true);
                 const response = await axios.get('/users/all');
-                // console.log(response.data.data);
                 setUsers(response.data.data);
             } catch (error) {
                 console.error('Error fetching users:', error);
@@ -38,7 +37,8 @@ const Project = () => {
 
         receiveMessage('projectMessage', (data) => {
             console.log('Received message:', data);
-            setMessages(prevMessages => [ ...prevMessages, data ]) // Update messages state
+            appendINMsg(data)
+            // setMessage(prevMessages => [ ...prevMessages, data ]) // Update messages state
         });
 
         axios.get(`/projects/get-project/${location.state.project._id}`)
@@ -76,14 +76,47 @@ const Project = () => {
     };
 
     const send = () => {
-        console.log(user);
         console.log("Sending message:", message);
         sendMessage('projectMessage', {
             message,
             sender: user
         })
+        appendOUTMsg(message);
         setMessage("")
 
+    }
+
+    const appendINMsg = (messageObject) => {
+        const messageBox = document.querySelector('.message-box');
+
+        const incomingMessage = document.createElement('div');
+        incomingMessage.classList.add('incoming', 'message', 'max-w-56', 'flex', 'flex-col', 'p-2', 'bg-slate-50', 'w-fit', 'rounded-md');
+        incomingMessage.innerHTML = `
+            <small class='opacity-65 text-xs'>${messageObject.sender.user.email}</small>
+            <p class='text-sm'>${messageObject.message}</p>
+        `;
+
+        messageBox.appendChild(incomingMessage);
+
+        // Scroll to the bottom of the message box
+        messageBox.scrollTop = messageBox.scrollHeight;
+    };
+
+    const appendOUTMsg = ()=>{
+        // console.log(user);
+        const messageBox = document.querySelector('.message-box');
+
+        const outgoingMessage = document.createElement('div');
+        outgoingMessage.classList.add('message', 'ml-auto', 'max-w-56', 'flex', 'flex-col', 'p-2', 'bg-slate-50', 'w-fit', 'rounded-md');
+        outgoingMessage.innerHTML = `
+            <small class='opacity-65 text-xs'>${user.user.email}</small>
+            <p class='text-sm'>${message}</p>
+        `;
+
+        messageBox.appendChild(outgoingMessage);
+
+        // Scroll to the bottom of the message box
+        messageBox.scrollTop = messageBox.scrollHeight;
     }
 
 
@@ -100,16 +133,16 @@ const Project = () => {
               </button>
             </header>
 
-            <div className="conversation-area flex flex-col flex-grow">
+            <div ref = {msgBox} className="conversation-area flex flex-col flex-grow">
               <div className="message-box flex-grow flex flex-col gap-2 p-1">
-                <div className="incoming message max-w-56 flex flex-col p-2 bg-slate-50 w-fit rounded-md">
+                {/* <div className="incoming message max-w-56 flex flex-col p-2 bg-slate-50 w-fit rounded-md">
                   <small className='opacity-65 text-xs'>example@gmail.com</small>
                   <p className='text-sm'>Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet </p> 
-                </div>
-                <div className="message ml-auto max-w-56 flex flex-col p-2 bg-slate-50 w-fit rounded-md">
+                </div> */}
+                {/* <div className="message ml-auto max-w-56 flex flex-col p-2 bg-slate-50 w-fit rounded-md">
                   <small className='opacity-65 text-xs'>example@gmail.com</small>
                   <p className='text-sm'>Lorem ipsum dolor sit amet </p> 
-                </div>
+                </div> */}
               </div>
 
               <div className="input-field w-full flex">

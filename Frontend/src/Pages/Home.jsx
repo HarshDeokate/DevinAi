@@ -6,6 +6,12 @@ import { Navigate, useNavigate } from 'react-router-dom'
 
 const Home = () => {
 
+  const {user} = useContext(UserContext);
+  const token = localStorage.getItem('token');
+  const [projectName, setProjectName] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [projects,setProjects] = useState([]);
+  const Navigate = useNavigate();
 
   useEffect(() => {
     axios.get('/projects/all').then((response) => {
@@ -15,16 +21,7 @@ const Home = () => {
     });
   },[]);
 
-  
-  const {user} = useContext(UserContext);
-  const token = localStorage.getItem('token');
-  const [projectName, setProjectName] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [projects,setProjects] = useState([]);
-  const Navigate = useNavigate();
 
-
-  
   function createProject(e){
     e.preventDefault();
     console.log(projectName);
