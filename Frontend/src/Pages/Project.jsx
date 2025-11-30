@@ -86,11 +86,29 @@ const Project = () => {
 
     }
 
+    const scrollToBottom = () => {
+        if (messageBoxRef.current) {
+            messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;
+        }
+    };
+
     const appendINMsg = (messageObject) => {
         const messageBox = document.querySelector('.message-box');
 
         const incomingMessage = document.createElement('div');
-        incomingMessage.classList.add('incoming', 'message', 'max-w-56', 'flex', 'flex-col', 'p-2', 'bg-slate-50', 'w-fit', 'rounded-md');
+        incomingMessage.classList.add(
+            'incoming',
+            'message',
+            'max-w-[75%]',       // LIMIT WIDTH
+            'w-fit',
+            'break-words',       // WRAP WORDS
+            'whitespace-normal', // MULTI-LINE
+            'flex',
+            'flex-col',
+            'p-2',
+            'bg-slate-50',
+            'rounded-md'
+        );        
         incomingMessage.innerHTML = `
             <small class='opacity-65 text-xs'>${messageObject.sender.user.email}</small>
             <p class='text-sm'>${messageObject.message}</p>
@@ -103,11 +121,23 @@ const Project = () => {
     };
 
     const appendOUTMsg = ()=>{
-        // console.log(user);
+        console.log(user);
         const messageBox = document.querySelector('.message-box');
 
         const outgoingMessage = document.createElement('div');
-        outgoingMessage.classList.add('message', 'ml-auto', 'max-w-56', 'flex', 'flex-col', 'p-2', 'bg-slate-50', 'w-fit', 'rounded-md');
+        outgoingMessage.classList.add(
+            'message',
+            'ml-auto',
+            'max-w-[75%]',       // LIMIT WIDTH
+            'w-fit',
+            'break-words',
+            'whitespace-normal',
+            'flex',
+            'flex-col',
+            'p-2',
+            'bg-slate-50',
+            'rounded-md'
+        );
         outgoingMessage.innerHTML = `
             <small class='opacity-65 text-xs'>${user.user.email}</small>
             <p class='text-sm'>${message}</p>
@@ -123,7 +153,8 @@ const Project = () => {
   return (
     <main className='h-screen w-screen flex '>
 
-        <section className="left flex flex-col h-full min-w-96 h-screen relative bg-slate-300">
+            <section className="left flex flex-col h-full w-96 bg-slate-300 relative">
+
             <header className='flex justify-between items-center p-2 px-4 w-full bg-slate-100'>
               <button className='flex gap-2 hover:opacity-80 transition' onClick={() => setIsUserModalOpen(true)}>
                 <i className="ri-add-fill mr-1">Add Collaborator</i>
@@ -133,8 +164,8 @@ const Project = () => {
               </button>
             </header>
 
-            <div ref = {msgBox} className="conversation-area flex flex-col flex-grow">
-              <div className="message-box flex-grow flex flex-col gap-2 p-1">
+            <div className="conversation-area flex flex-col flex-grow overflow-hidden">
+                <div ref = {msgBox} className="message-box flex-grow flex flex-col gap-2 p-2 overflow-y-auto overflow-x-hidden">
                 {/* <div className="incoming message max-w-56 flex flex-col p-2 bg-slate-50 w-fit rounded-md">
                   <small className='opacity-65 text-xs'>example@gmail.com</small>
                   <p className='text-sm'>Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet </p> 

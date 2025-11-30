@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Login from '../Pages/Login.jsx';
 import Register from '../Pages/Register.jsx';
 import Home from '../Pages/Home.jsx';
-import Project from '../Pages/project.jsx';
+import Project from '../Pages/Project.jsx';
 import UserAuth from '../auth/UserAuth.jsx';
 import {UserContext ,UserProvider } from '../context/userContext.jsx';
 import { BrowserRouter } from 'react-router-dom'
